@@ -1,0 +1,94 @@
+<div class="row">
+<div class="span12">      		
+	   		
+	<div class="widget ">
+		<div class="widget-header">
+			<i class="icon-plus"></i>
+ 			<h3>添加任务</h3>
+		</div> <!-- /widget-header -->
+
+		<div class="widget-content">
+		
+		<div class="alert alert-danger hide" role="alert"></div>
+
+		<form id="add-task" action="{{urlfor "MakePicController.AddNginx"}}" method="post" class="form-horizontal">
+			<fieldset>
+				
+				<div class="control-group">											
+					<label class="control-label" for="index_name">索引名称</label>
+					<div class="controls">
+						<input type="text" name="index_name" class="span6" id="index_name">
+					</div>				
+				</div>
+								
+				<div class="control-group">											
+					<label class="control-label" for="server_name">域名</label>
+					<div class="controls">
+						<input type="text" name="server_name" class="span6" id="server_name">
+					</div> 
+				</div>
+
+				<div class="control-group">											
+					<label class="control-label" for="from_time">从哪个时间</label>
+					<div class="controls">
+						<input type="text" name="from_time" class="span6" id="from_time">
+					</div>				
+				</div>
+
+
+				<div class="control-group">											
+					<label class="control-label" for="to_time">到哪个时间</label>
+					<div class="controls">
+						<input type="text" name="to_time" class="span6" id="to_time">
+					</div>				
+				</div>
+
+
+				<div class="control-group">											
+					<label class="control-label" for="topN">topN</label>
+					<div class="controls">
+						<input type="text" name="topN" class="span6" id="topN">
+					</div>				
+				</div>
+
+		
+				<br />
+				
+					
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary">提交</button> 
+					<a href="{{urlfor "MainController.Index"}}" class="btn">返回首页</a>
+				</div> <!-- /form-actions -->
+			</fieldset>
+		</form>
+
+		</div>
+	</div>
+</div>
+</div>
+
+<script>
+$(function () {
+	$("form").submit(function () {
+		$(".alert").hide();
+		$("button[type='submit']").attr('disabled', true);
+		$.post('{{urlfor "MakePicController.AddNginx"}}', $(this).serialize(), function (out) {
+			if (out.status == 0) {
+				window.location.href = '{{urlfor "MainController.Index"}}';
+			} else {
+				$(".alert").text(out.msg);
+				$(".alert").show();
+				$("button[type='submit']").attr('disabled', false);
+			}
+		}, "json");
+		return false;
+	});
+	$("input[name='notify']").click(function () {
+		if ($(this).val() > 0) {
+			$('.notify_email').removeClass('hide');
+		} else {
+			$('.notify_email').addClass('hide');
+		}
+	});
+});
+</script>

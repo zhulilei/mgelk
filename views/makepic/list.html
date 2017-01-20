@@ -1,0 +1,81 @@
+<div class="row">
+<div class="span12">      		
+	   		
+	<div class="widget ">
+		<div class="widget-header">
+			<i class="icon-th-list"></i>
+ 			<h3>选择集群</h3>
+		</div> <!-- /widget-header -->
+
+		<div class="widget-content">
+		
+		<div class="alert hide" role="alert"></div>
+		
+		<div class="btn-toolbar">		
+			<div class="btn-group">
+			
+
+		    <div>{{$.clusterid}}</div>
+			<div class="btn-group  btn-large" style="float:left">
+			<!--<form method="post" name="s" action="{{urlfor "TaskController.List"}}">-->
+			<form method="post" name="s">
+				<select name="clusterid" class="btn-large">
+					<option value="0">请选择集群</option>
+					{{range $k, $v := .clusters}}
+					<option value="{{$v.Id}}" {{if eq $v.Id $.clusterid}}selected{{end}}>{{$v.ClusterName}}</option>
+					{{end}}
+				</select>
+			</form>
+			</div>
+
+
+			<a href="{{urlfor "MakePicController.Add"}}?clusterid={{$.clusterid}}" class="btn btn-large btn-info"><span class="icon-plus"></span> 新建视图</a>
+
+		
+			<!--
+			<a href="{{urlfor "TaskController.AddNginx"}}" class="btn btn-large btn-info"><span class="icon-plus"></span> 新建任务</a>
+			-->
+			</div>
+			
+	
+			
+		</div>
+		
+		</div>
+	</div>
+</div>
+</div> <!-- /row -->
+
+<script>
+$(function() {
+	$('[data-toggle="tooltip"]').tooltip()
+	$("input[name='chkall']").click(function () {
+		$("input[name='ids']").attr("checked", $(this).attr("checked") == "checked");
+	});
+	$("select[name='clusterid']").change(function () {
+		$("form[name='s']").submit();
+	});
+	$(".btn-run").click(function () {
+		return confirm("该功能建议只用来做任务测试，确定要立即执行该任务吗？");
+	});
+});
+
+function batch(action) {
+	$(".alert").hide();
+	if ($("input[name='ids']:checked").size() < 1) {
+		$(".alert").text("请选择要操作的任务");
+		$(".alert").show();
+	} else {
+		var url = "{{urlfor "TaskController.Batch"}}";
+		$.post(url + "?action=" + action, $("#form-list").serialize(), function(out) {
+			if (out.status != 0) {
+				$(".alert").text(out.msg);
+				$(".alert").show();
+			} else {
+				window.location.reload();
+			}
+		}, "json");
+	}
+	return false;
+}
+</script>
